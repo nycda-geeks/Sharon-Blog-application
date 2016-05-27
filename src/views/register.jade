@@ -1,0 +1,21 @@
+extends layout
+
+block content
+
+	h2 Create your account
+
+	form(name="messageForm", action="/register", method="post")
+		div.input
+			span.label Name 
+			input(type="text", name="nameUser")
+		div.input
+			span.label Email 
+			input(type="text", name="emailUser")
+		div.input
+			span.label Password 
+			input(type="text", name="passwordUser")
+		div.actions
+			input#button(type="submit", value="Submit")
+
+
+// - register an account 
