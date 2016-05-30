@@ -1,0 +1,26 @@
+// - create a post
+// - view a list of their own posts
+
+extends layout
+
+block content
+
+	h2 Your page
+
+		form(name="submitPost", action="/yourpage", method="post")
+		div.input
+			span.label Title 
+			input(type="text", name="titlePost")
+		div.input
+			span.label Write your message 
+			input(type="text", name="bodyPost")
+		div.input
+			span.label Add an image link
+			input(type="text", name="imgPost")
+		div.actions
+			input#button(type="submit", value="Post")
+
+	each post in yourPosts
+		h5 #{post.title}
+		p #{post.body}
+		img(src="http://" + post.img)
