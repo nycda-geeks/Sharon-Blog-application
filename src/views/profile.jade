@@ -7,7 +7,8 @@ block content
 
 	h2 Your page
 
-		form(name="submitPost", action="/yourpage", method="post")
+	p
+		form(name="submitPost", action="/profile", method="post")
 		div.input
 			span.label Title 
 			input(type="text", name="titlePost")
@@ -20,7 +21,7 @@ block content
 		div.actions
 			input#button(type="submit", value="Post")
 
-	each post in yourPosts
-		h5 #{post.title}
-		p #{post.body}
-		img(src="http://" + post.img)
+	//each post in yourPosts
+	//	h5 #{post.title}
+	//	p #{post.body}
+	//	img(src="http://" + post.img)

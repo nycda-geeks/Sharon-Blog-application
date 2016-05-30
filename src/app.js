@@ -13,11 +13,11 @@ var sequelize = new Sequelize('blogapplication', 'postgres', 'Hi123', {
 	dialect: 'postgres'
 });
 
-app.use(session({
-	// secret: 'oh wow very secret much security',
-	// resave: true,
-	// saveUninitialized: false
-}));
+// app.use(session({
+// 	secret: 'oh wow very secret much security',
+// 	resave: true,
+// 	saveUninitialized: false
+// }));
 
 app.set('views', './src/views');
 app.set('view engine', 'jade')
@@ -26,36 +26,38 @@ app.use(express.static('./public/js'))
 app.use(express.static('./public/css'))
 
 var User = sequelize.define('users', {
-		name: Sequelize.STRING,
-		email: Sequelize.STRING,
-		password: Sequelize.STRING
-	});
+	name: Sequelize.STRING,
+	email: Sequelize.STRING,
+	password: Sequelize.STRING
+});
 var Post = sequelize.define('posts', {
-		title: Sequelize.STRING,
-		body: Sequelize.STRING,
-		img: Sequelize.STRING
+	title: Sequelize.STRING,
+	body: Sequelize.STRING,
+	img: Sequelize.STRING
 })
-	User.hasMany(Post)
-	Post.belongsTo(User)
+	// User.hasMany(Post)
+	// Post.belongsTo(User)
 
 
 //Homepage Wall
 app.get('/', function(req, res){
 
-	Post.findAll().then(function (posts) {
-	var data = posts.map(function (post) {
-		return {
-			title: post.dataValues.title,
-			body: post.dataValues.body
-		};
-	});
+// 	Post.findAll().then(function (posts) {
+// 	var data = posts.map(function (post) {
+// 		return {
+// 			title: post.dataValues.title,
+// 			body: post.dataValues.body
+// 		};
+// 	});
 
-	console.log("printing results:");
-	console.log(data);
+// 	console.log("printing results:");
+// 	console.log(data);
 
-	res.render('index', 
-		{posts: data})
-} );
+// 	res.render('index', 
+// 		{allPosts: data})
+// } );
+res.render('index')
+})
 
 
 // Register new user
@@ -101,39 +103,41 @@ app.post('/login', function(req, res){
 // Your page - add new post and view your posts
 app.get('/profile', function(req, res){
 
-	Post.findAll().then(function (posts) {
-	var data = posts.map(function (post) {
-		return {
-			title: post.dataValues.title,
-			body: post.dataValues.body,
-			img: post.dataValues.img
-		};
-	});
-		console.log("printing results:");
-		console.log(data);
-	});	
+	// Post.findAll().then(function (posts) {
+	// 	var data = posts.map(function (post) {
+	// 		return {
+	// 			title: post.dataValues.title,
+	// 			body: post.dataValues.body,
+	// 			img: post.dataValues.img
+	// 		};
+	// 		console.log("printing results:");
+	// 		console.log(data);
+	// 	});
+	// 	res.render('profile', {
+	// 		yourPosts: data
+	// 	});
+	// });
 
-	res.render('profile', {
-		yourPosts: data
-	})
-} );
+	res.render('profile')
+});
 
-app.post('/profile', function(req, res){
+// app.post('/profile', function(req, res){
 
-	var titlePost = req.body.titlePost
-	var bodyPost = req.body.bodyPost
-	var imgPost = req.body.imgPost
+// 	var titlePost = req.body.titlePost
+// 	var bodyPost = req.body.bodyPost
+// 	var imgPost = req.body.imgPost
 
-	sequelize.sync().then(function () {
-		Post.create({
-			title: titlePost,
-			body: bodyPost,
-			img: imgPost
-		});
-	}).then(function() {
-		//console.log(users[name])
-		res.render( 'profile' )
-})
+// 	sequelize.sync().then(function () {
+// 		Post.create({
+// 			title: titlePost,
+// 			body: bodyPost,
+// 			img: imgPost
+// 		});
+// 	}).then(function() {
+// 		//console.log(users[name])
+// 		res.render( 'profile' )
+// 	})
+// })
 
 
 // One post - to click one post and see it.
@@ -143,7 +147,7 @@ app.get('/onepost', function(req, res){
 	// Then put this information in a variable: entire object
 	// Send entire object to next page, render.
 
-	var selectPost = selectedPost
+	//var selectPost = selectedPost
 
 	res.render('onepost', {
 		selectPost: selectPost
@@ -152,4 +156,4 @@ app.get('/onepost', function(req, res){
 
 
 
-app.listen(3000);
+app.listen(3000)

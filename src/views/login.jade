@@ -1,0 +1,19 @@
+//login
+
+extends layout
+
+block content
+
+	h2 Login
+
+	p
+		form(name="submitPost", action="/login", method="post")
+		div.input
+			span.label Email  
+			input(type="text", name="loginEmail")
+		div.input
+			span.label Password 
+			input(type="text", name="loginPassword")
+		div.actions
+			input#button(type="submit", value="Post")
+
