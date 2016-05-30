@@ -13,11 +13,11 @@ var sequelize = new Sequelize('blogapplication', 'postgres', 'Hi123', {
 	dialect: 'postgres'
 });
 
-// app.use(session({
-// 	secret: 'oh wow very secret much security',
-// 	resave: true,
-// 	saveUninitialized: false
-// }));
+app.use(session({
+	secret: 'secured password',
+	resave: false,
+	saveUninitialized: false
+}));
 
 app.set('views', './src/views');
 app.set('view engine', 'jade')
@@ -78,9 +78,10 @@ app.post('/register', function(req, res){
 			email: emailUser,
 			password: passwordUser
 		});
-	}).then(function() {
-		req.session.user = user
-		res.redirect( '/profile' )
+		req.session.user = User
+	}).then(function(User) {
+		
+		res.redirect( '/login' )
 	})
 	
 })
@@ -90,14 +91,43 @@ app.get('/login', function(req, res){
 	res.render('login')
 } );
 
-app.post('/login', function(req, res){
-	// var loginEmail = req.body.loginEmail;
-	// var loginPassword = req.body.loginPassword;
-	// User.findOne({where: {
-	// 	email: req.body.loginEmail
-	// }})
+app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
+	var loginEmail = req.body.loginEmail;
+	var loginPassword = req.body.loginPassword;
 
-})
+	if(loginEmail.length === 0) {
+		console.log('niet1')
+		res.redirect('/?message=' + encodeURIComponent("Please fill out your email address."));
+		return;
+	}
+
+	if(loginPassword.length === 0) {
+		console.log('niet2')
+		res.redirect('/?message=' + encodeURIComponent("Please fill out your password."));
+		return;
+	}
+
+	User.findOne({
+		where: {
+			email: loginEmail
+		}
+	}).then(function (user) {
+		console.log('niet3')
+		if (user !== null && loginPassword === user.password) {
+			req.session.user = user;
+			console.log(user.name)
+			res.redirect('/profile');
+		} else {
+			console.log('niet5')
+			res.redirect('/?message=' + encodeURIComponent("Invalid email or password."));
+		}
+	}, function (error) {
+		console.log('niet6')
+		res.redirect('/?message=' + encodeURIComponent("Invalid email or password."));
+	});
+});
+
+
 
 
 // Your page - add new post and view your posts
@@ -117,8 +147,11 @@ app.get('/profile', function(req, res){
 	// 		yourPosts: data
 	// 	});
 	// });
+var data = req.session.user
 
-	res.render('profile')
+res.render('profile', {
+	storedUser: data
+})
 });
 
 // app.post('/profile', function(req, res){
@@ -154,6 +187,14 @@ app.get('/onepost', function(req, res){
 	})
 } );
 
+
+app.get('/logout', function(req, res){
+	req.session.destroy(function(err) {
+  	//cannot access session here
+	})
+	res.render('index', {
+		message: 'Successfully logged out.'})
+})
 
 
 app.listen(3000)

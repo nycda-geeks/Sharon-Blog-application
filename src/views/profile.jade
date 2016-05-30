@@ -5,7 +5,9 @@ extends layout
 
 block content
 
-	h2 Your page
+	h2 Profile
+	
+	p= storedUser.name
 
 	p
 		form(name="submitPost", action="/profile", method="post")
