@@ -1,0 +1,24 @@
+extends layout
+
+block content
+
+	h2 Wall
+
+	each post in allPosts
+		h3= post.title
+		p= post.body
+		img(src= post.img)
+		form(name="commenting", action="/comment", method="post")
+			div.input
+				span.label Leave your comment here:
+				input(type="text", name="postComment")
+				input(type='text', name='id', value="#{post.id}", hidden)
+				input(type="submit", value="Make a comment")
+		#allComments
+		//- if allComments
+		//- 	each comment in allComments
+		//- 	p= comment.body
+
+
+
+// - view a list of everyone's posts

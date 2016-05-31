@@ -14,15 +14,12 @@ block content
 			div.input
 				span.label Title 
 				input(type="text", name="titlePost")
-			br
 			div.input
 				span.label Write your message 
 				input(type="text", name="bodyPost")
-			br
 			div.input
 				span.label Add an image link
 				input(type="text", name="imgPost")
-			br
 			div.actions
 				input#button(type="submit", value="Post")
 
@@ -30,4 +27,3 @@ block content
 		h3= post.title
 		p= post.body
 		img(src= post.img)
-		br

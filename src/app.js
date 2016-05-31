@@ -36,30 +36,60 @@ var Post = sequelize.define('posts', {
 	body: Sequelize.STRING,
 	img: Sequelize.STRING
 })
+var Comment = sequelize.define('comments', {
+	body: Sequelize.STRING,
+})
+
+sequelize.sync()
 
 User.hasMany(Post)
 Post.belongsTo(User)
+Post.hasMany(Comment)
+User.hasMany(Comment)
+Comment.belongsTo(User)
+Comment.belongsTo(Post)
 
 
 //Homepage Wall
 app.get('/', function(req, res){
 
-// 	Post.findAll().then(function (posts) {
-// 	var data = posts.map(function (post) {
-// 		return {
-// 			title: post.dataValues.title,
-// 			body: post.dataValues.body
-// 		};
-// 	});
-
-// 	console.log("printing results:");
-// 	console.log(data);
-
-// 	res.render('index', 
-// 		{allPosts: data})
-// } );
-res.render('index')
+	Post.findAll().then(function (posts) {
+		var data = posts.map(function (post) {
+			console.log('id is ' + post.dataValues.id)
+			return {
+				id: post.dataValues.id,
+				title: post.dataValues.title,
+				body: post.dataValues.body,
+				img: post.dataValues.img
+			};
+		});
+		console.log("printing results:");
+		console.log(data);
+		res.render('blog', {
+			allPosts: data
+		})
+	} )
 })
+
+
+app.post('/comment', function(req, res){
+	Post.findOne({
+		where: {
+			id: req.body.id
+		}
+	}).then(function (thepost) {
+		console.log(thepost)
+		thepost.createComment({
+			body: req.body.postComment
+		}).then(function(thecomment){ 
+			//console.log(req.session.user)
+			thecomment.setUser([req.session.user])
+		})
+	}).then(function(){
+		res.redirect('/')
+	})
+})
+
 
 
 // Register new user
@@ -173,9 +203,7 @@ app.post('/profile', function(req, res){
 			img: imgPost
 		})
 	}).then(function(){
-		res.render( 'profile', {
-			storedUser: req.session.user
-		})
+		res.redirect( '/profile' )
 	})
 })
 
@@ -199,7 +227,7 @@ app.get('/logout', function(req, res){
 	req.session.destroy(function(err) {
   	//cannot access session here
   })
-	res.render('index', {
+	res.render('blog', {
 		message: 'Successfully logged out.'})
 })
 
