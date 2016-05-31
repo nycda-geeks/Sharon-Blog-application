@@ -16,7 +16,8 @@ var sequelize = new Sequelize('blogapplication', 'postgres', 'Hi123', {
 app.use(session({
 	secret: 'secured password',
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: false,
+	cookie: { maxAge: 6000000 }
 }));
 
 app.set('views', './src/views');
@@ -35,8 +36,9 @@ var Post = sequelize.define('posts', {
 	body: Sequelize.STRING,
 	img: Sequelize.STRING
 })
-	// User.hasMany(Post)
-	// Post.belongsTo(User)
+
+User.hasMany(Post)
+Post.belongsTo(User)
 
 
 //Homepage Wall
@@ -70,21 +72,23 @@ app.get('/register', function(req, res){
 app.post('/register', function(req, res){
 	var nameUser = req.body.nameUser
 	var emailUser = req.body.emailUser
-	var passwordUser = req.body.passwordUser.toString()
+	var passwordUser = req.body.passwordUser
 
 	sequelize.sync().then(function () {
 		User.create({
 			name: nameUser,
 			email: emailUser,
 			password: passwordUser
+		}).then(function(user){
+			req.session.user = user
 		});
-		req.session.user = User
-	}).then(function(User) {
+	}).then(function() {
 		
-		res.redirect( '/login' )
+		res.redirect( '/profile' )
 	})
 	
 })
+
 
 
 app.get('/login', function(req, res){
@@ -115,7 +119,7 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 		console.log('niet3')
 		if (user !== null && loginPassword === user.password) {
 			req.session.user = user;
-			console.log(user.name)
+			console.log(user.id)
 			res.redirect('/profile');
 		} else {
 			console.log('niet5')
@@ -130,47 +134,50 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 
 
 
-// Your page - add new post and view your posts
+// Profile - add new post and view your posts
 app.get('/profile', function(req, res){
 
-	// Post.findAll().then(function (posts) {
-	// 	var data = posts.map(function (post) {
-	// 		return {
-	// 			title: post.dataValues.title,
-	// 			body: post.dataValues.body,
-	// 			img: post.dataValues.img
-	// 		};
-	// 		console.log("printing results:");
-	// 		console.log(data);
-	// 	});
-	// 	res.render('profile', {
-	// 		yourPosts: data
-	// 	});
-	// });
-var data = req.session.user
+	Post.findAll().then(function (posts) {
+		var data = posts.map(function (post) {
+			return {
+				title: post.dataValues.title,
+				body: post.dataValues.body,
+				img: post.dataValues.img
+			};
+			console.log("printing results:");
+			console.log(data);
+		});
+		res.render('profile', {
+			yourPosts: data,
+			storedUser: req.session.user
+		});
+	});
 
-res.render('profile', {
-	storedUser: data
-})
 });
 
-// app.post('/profile', function(req, res){
+app.post('/profile', function(req, res){
 
-// 	var titlePost = req.body.titlePost
-// 	var bodyPost = req.body.bodyPost
-// 	var imgPost = req.body.imgPost
+	var titlePost = req.body.titlePost
+	var bodyPost = req.body.bodyPost
+	var imgPost = req.body.imgPost
 
-// 	sequelize.sync().then(function () {
-// 		Post.create({
-// 			title: titlePost,
-// 			body: bodyPost,
-// 			img: imgPost
-// 		});
-// 	}).then(function() {
-// 		//console.log(users[name])
-// 		res.render( 'profile' )
-// 	})
-// })
+	console.log(req.session.user)
+	User.findOne({
+		where: {
+			id: req.session.user.id
+		}
+	}).then(function(theuser){
+		theuser.createPost({
+			title: titlePost,
+			body: bodyPost,
+			img: imgPost
+		})
+	}).then(function(){
+		res.render( 'profile', {
+			storedUser: req.session.user
+		})
+	})
+})
 
 
 // One post - to click one post and see it.
@@ -191,7 +198,7 @@ app.get('/onepost', function(req, res){
 app.get('/logout', function(req, res){
 	req.session.destroy(function(err) {
   	//cannot access session here
-	})
+  })
 	res.render('index', {
 		message: 'Successfully logged out.'})
 })
