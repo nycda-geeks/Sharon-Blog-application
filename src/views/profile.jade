@@ -5,9 +5,7 @@ extends layout
 
 block content
 
-	h2 Profile
-	
-	p= storedUser.name
+	h2= 'Welcome to your profile ' + storedUser.name
 
 	p
 		form(name="submitPost", action="/profile", method="post")
@@ -16,14 +14,21 @@ block content
 				input(type="text", name="titlePost")
 			div.input
 				span.label Write your message 
-				input(type="text", name="bodyPost")
+				textarea(type="text", name="bodyPost", rows="5")
 			div.input
 				span.label Add an image link
 				input(type="text", name="imgPost")
 			div.actions
 				input#button(type="submit", value="Post")
 
-	each post in yourPosts
-		h3= post.title
-		p= post.body
-		img(src= post.img)
+	if yourPosts
+		each post in yourPosts
+			h3= post.title
+			p= post.body
+			img(src= post.img)
+			form(name="commenting", action="/comment", method="post")
+				div.input
+					span.label Leave your comment:
+					input(type="text", name="postComment")
+					input(type='text', name='id', value="#{post.id}", hidden)
+					input(type="submit", value="Make a comment")

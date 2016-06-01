@@ -6,6 +6,7 @@ block content
 
 	each post in allPosts
 		h3= post.title
+		p= 'Posted by ' + post.user.name
 		p= post.body
 		img(src= post.img)
 		form(name="commenting", action="/comment", method="post")

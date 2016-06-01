@@ -52,43 +52,41 @@ Comment.belongsTo(Post)
 
 //Homepage Wall
 app.get('/', function(req, res){
-
-	Post.findAll().then(function (posts) {
-		var data = posts.map(function (post) {
-			console.log('id is ' + post.dataValues.id)
-			return {
-				id: post.dataValues.id,
-				title: post.dataValues.title,
-				body: post.dataValues.body,
-				img: post.dataValues.img
-			};
-		});
-		console.log("printing results:");
-		console.log(data);
+	Post.findAll({ include: [User] 
+	}).then((posts) => {
 		res.render('blog', {
-			allPosts: data
+			storedUser: req.session.user,
+			allPosts: posts
 		})
 	} )
 })
 
 
+
 app.post('/comment', function(req, res){
-	Post.findOne({
-		where: {
-			id: req.body.id
-		}
-	}).then(function (thepost) {
-		console.log(thepost)
-		thepost.createComment({
+	Promise.all([
+		Comment.create({
 			body: req.body.postComment
-		}).then(function(thecomment){ 
-			//console.log(req.session.user)
-			thecomment.setUser([req.session.user])
+		}),
+		User.findOne({
+			where: {
+				id: req.session.user.id
+			}
+		}),
+		Post.findOne({
+			where: {
+				id: req.body.id
+			}
 		})
-	}).then(function(){
-		res.redirect('/')
+		]).then(function(allofthem){
+			console.log(allofthem[0])
+			console.log(allofthem[1])
+			console.log(allofthem[2])
+			allofthem[0].setUser(allofthem[1])
+		}).then(function(){
+			res.redirect('/')
+		})
 	})
-})
 
 
 
@@ -104,16 +102,12 @@ app.post('/register', function(req, res){
 	var emailUser = req.body.emailUser
 	var passwordUser = req.body.passwordUser
 
-	sequelize.sync().then(function () {
-		User.create({
-			name: nameUser,
-			email: emailUser,
-			password: passwordUser
-		}).then(function(user){
-			req.session.user = user
-		});
-	}).then(function() {
-		
+	User.create({
+		name: nameUser,
+		email: emailUser,
+		password: passwordUser
+	}).then(function(user) {
+		//req.session.user = user
 		res.redirect( '/profile' )
 	})
 	
@@ -166,24 +160,20 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 
 // Profile - add new post and view your posts
 app.get('/profile', function(req, res){
-
-	Post.findAll().then(function (posts) {
-		var data = posts.map(function (post) {
-			return {
-				title: post.dataValues.title,
-				body: post.dataValues.body,
-				img: post.dataValues.img
-			};
-			console.log("printing results:");
-			console.log(data);
-		});
-		res.render('profile', {
-			yourPosts: data,
-			storedUser: req.session.user
+	User.findOne({
+		where: {
+			id: req.session.user.id
+		}
+	}).then(function(theuser){
+		theuser.getPosts().then((posts) => {
+			res.render('profile', {
+				yourPosts: posts,
+				storedUser: req.session.user
+			});
 		});
 	});
-
 });
+
 
 app.post('/profile', function(req, res){
 
