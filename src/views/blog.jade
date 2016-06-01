@@ -9,16 +9,20 @@ block content
 		p= 'Posted by ' + post.user.name
 		p= post.body
 		img(src= post.img)
-		form(name="commenting", action="/comment", method="post")
-			div.input
-				span.label Leave your comment here:
-				input(type="text", name="postComment")
-				input(type='text', name='id', value="#{post.id}", hidden)
-				input(type="submit", value="Make a comment")
-		#allComments
-		//- if allComments
-		//- 	each comment in allComments
-		//- 	p= comment.body
+		br
+		if storedUser	
+			form(name="commenting", action="/comment", method="post")
+				div.input
+					span.label Leave your comment here:
+					input(type="text", name="postComment")
+					input(type='text', name='id', value="#{post.id}", hidden)
+					input(type="submit", value="Make a comment")
+		else 
+			a(href='http://localhost:3000/login') Please login to post comments.
+		each one in post.comments
+			p= 'Comment by ' 
+			p=one.body
+		
 
 
 

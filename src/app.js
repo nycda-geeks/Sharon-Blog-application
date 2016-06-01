@@ -52,13 +52,21 @@ Comment.belongsTo(Post)
 
 //Homepage Wall
 app.get('/', function(req, res){
-	Post.findAll({ include: [User] 
+	Post.findAll({ include: [User, Comment] 
 	}).then((posts) => {
+		res.send(posts)
 		res.render('blog', {
 			storedUser: req.session.user,
 			allPosts: posts
 		})
-	} )
+	} );
+})
+
+app.post('/showcomments', (req, res) => {
+	Comment.findAll({ include: [Post, User] 
+	}).then((comments) => {
+		res.send(comments)
+	})
 })
 
 
@@ -79,14 +87,15 @@ app.post('/comment', function(req, res){
 			}
 		})
 		]).then(function(allofthem){
-			console.log(allofthem[0])
-			console.log(allofthem[1])
-			console.log(allofthem[2])
-			allofthem[0].setUser(allofthem[1])
-		}).then(function(){
-			res.redirect('/')
-		})
+		// console.log(allofthem[0])
+		// console.log(allofthem[1])
+		// console.log(allofthem[2])
+		allofthem[0].setUser(allofthem[1])
+		allofthem[0].setPost(allofthem[2])
+	}).then(function(){
+		res.redirect('/')
 	})
+})
 
 
 
@@ -191,9 +200,9 @@ app.post('/profile', function(req, res){
 			title: titlePost,
 			body: bodyPost,
 			img: imgPost
-		})
-	}).then(function(){
+		}).then(function(){
 		res.redirect( '/profile' )
+	})
 	})
 })
 
