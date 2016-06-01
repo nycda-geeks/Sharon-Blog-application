@@ -20,7 +20,7 @@ block content
 		else 
 			a(href='http://localhost:3000/login') Please login to post comments.
 		each one in post.comments
-			p= 'Comment by ' 
+			p= 'Comment by ' + one.user.name
 			p=one.body
 		
 

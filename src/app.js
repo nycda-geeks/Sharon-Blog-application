@@ -52,9 +52,9 @@ Comment.belongsTo(Post)
 
 //Homepage Wall
 app.get('/', function(req, res){
-	Post.findAll({ include: [User, Comment] 
+	Post.findAll({ include: [{model: User}, {model: Comment, include: [User]}] 
 	}).then((posts) => {
-		res.send(posts)
+		//res.send(posts)
 		res.render('blog', {
 			storedUser: req.session.user,
 			allPosts: posts
@@ -62,12 +62,12 @@ app.get('/', function(req, res){
 	} );
 })
 
-app.post('/showcomments', (req, res) => {
-	Comment.findAll({ include: [Post, User] 
-	}).then((comments) => {
-		res.send(comments)
-	})
-})
+// app.post('/showcomments', (req, res) => {
+// 	Comment.findAll({ include: [Post, User] 
+// 	}).then((comments) => {
+// 		res.send(comments)
+// 	})
+// })
 
 
 
