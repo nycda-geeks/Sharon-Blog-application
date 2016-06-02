@@ -14,14 +14,17 @@ block content
 			form(name="commenting", action="/comment", method="post")
 				div.input
 					span.label Leave your comment here:
-					input(type="text", name="postComment")
+					br
+					textarea(type="text", name="postComment", cols="50", rows="3")
 					input(type='text', name='id', value="#{post.id}", hidden)
+					input(type='text', name='origin', value="/", hidden)
+					br
 					input(type="submit", value="Make a comment")
 		else 
 			a(href='http://localhost:3000/login') Please login to post comments.
 		each one in post.comments
 			p= 'Comment by ' + one.user.name
-			p=one.body
+			p= one.body
 		
 
 

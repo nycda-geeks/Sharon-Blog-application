@@ -83,7 +83,7 @@ app.post('/comment', function(req, res){
 			allofthem[0].setUser(allofthem[1])
 			allofthem[0].setPost(allofthem[2])
 		}).then(function(){
-			res.redirect('/')
+			res.redirect(req.body.origin)
 		})
 	})
 
@@ -174,20 +174,22 @@ app.get('/profile', function(req, res){
 	if (user === undefined) {
 		res.redirect('/?message=' + encodeURIComponent("Please log in to view your profile."));
 	} else {
-		User.findOne({
+		Post.findAll({
 			where: {
-				id: user.id
-			}
-		}).then(function(theuser){
-			theuser.getPosts({include: [Comment]}).then((posts) => {
+				userId: user.id
+			},
+			include: [{ 
+				model: Comment, include: [{ 
+					model: User }] 
+				}]
+			}).then((posts) => {
 				res.render('profile', {
 					yourPosts: posts,
 					storedUser: user
 				});
-			});
-		});
-	}
-});
+			})
+		}
+	});
 
 
 app.post('/profile', function(req, res){
@@ -213,31 +215,15 @@ app.post('/profile', function(req, res){
 })
 
 
-// One post - to click one post and see it.
-app.get('/onepost', function(req, res){
-
-	// work with jQuery to click a post and select it.
-	// Then put this information in a variable: entire object
-	// Send entire object to next page, render.
-
-	//var selectPost = selectedPost
-
-	res.render('onepost', {
-		selectPost: selectPost
-	})
-} );
-
-
 //cannot access session here
 app.get('/logout', function(req, res){
 	req.session.destroy(function(err) {
-		if(error) {
-			throw error;
-		}res.render('blog', {
+		if(err) {
+			throw err;
+		}.then(() => { res.render('blog', {
 			message: 'Successfully logged out.'})
-
 	})
-	
+	})
 })
 
 

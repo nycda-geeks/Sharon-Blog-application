@@ -1,11 +1,12 @@
 body {
-	font-family: sans-serif;
-	font-size: 18px;
-}
+  font-family: sans-serif;
+  font-size: 18px;
+  width: 80%; }
 
 img {
-	max-width:500px;
-}
+  max-width: 500px; }
+
 h3 {
-	font-size: 21px;
-}
+  font-size: 21px; }
+
+/*# sourceMappingURL=style.css.map */
