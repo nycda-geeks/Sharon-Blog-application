@@ -53,21 +53,14 @@ Comment.belongsTo(Post)
 //Homepage Wall
 app.get('/', function(req, res){
 	Post.findAll({ include: [{model: User}, {model: Comment, include: [User]}] 
-	}).then((posts) => {
-		//res.send(posts)
-		res.render('blog', {
-			storedUser: req.session.user,
-			allPosts: posts
-		})
-	} );
+}).then((posts) => {
+	res.render('blog', {
+		message: req.query.message,
+		storedUser: req.session.user,
+		allPosts: posts
+	})
+} );
 })
-
-// app.post('/showcomments', (req, res) => {
-// 	Comment.findAll({ include: [Post, User] 
-// 	}).then((comments) => {
-// 		res.send(comments)
-// 	})
-// })
 
 
 
@@ -87,22 +80,21 @@ app.post('/comment', function(req, res){
 			}
 		})
 		]).then(function(allofthem){
-		// console.log(allofthem[0])
-		// console.log(allofthem[1])
-		// console.log(allofthem[2])
-		allofthem[0].setUser(allofthem[1])
-		allofthem[0].setPost(allofthem[2])
-	}).then(function(){
-		res.redirect('/')
+			allofthem[0].setUser(allofthem[1])
+			allofthem[0].setPost(allofthem[2])
+		}).then(function(){
+			res.redirect('/')
+		})
 	})
-})
 
 
 
 // Register new user
 // Still to add: if user already exists; don't create but return with error.
 app.get('/register', function(req, res){
-	res.render('register')
+	res.render('register', {
+		message: req.query.message
+	})
 } );
 
 
@@ -111,21 +103,35 @@ app.post('/register', function(req, res){
 	var emailUser = req.body.emailUser
 	var passwordUser = req.body.passwordUser
 
-	User.create({
-		name: nameUser,
-		email: emailUser,
-		password: passwordUser
-	}).then(function(user) {
-		//req.session.user = user
-		res.redirect( '/profile' )
-	})
-	
+	if(nameUser.length === 0) {
+		res.redirect('/register/?message=' + encodeURIComponent("Please fill out your email address."));
+		return;
+	}
+	if(emailUser.length === 0) {
+		res.redirect('/register/?message=' + encodeURIComponent("Please fill out your password."));
+		return;
+	}
+	if(passwordUser.length === 0) {
+		res.redirect('/register/?message=' + encodeURIComponent("Please fill out your password."));
+		return;
+	}
+	if(nameUser !== null && emailUser !== null && passwordUser !== null){
+		User.create({
+			name: nameUser,
+			email: emailUser,
+			password: passwordUser
+		}).then(function(user) {
+			res.redirect( '/profile' )
+		})
+	}
 })
 
 
 
 app.get('/login', function(req, res){
-	res.render('login')
+	res.render('login', {
+		message: req.query.message
+	})
 } );
 
 app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
@@ -133,14 +139,12 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 	var loginPassword = req.body.loginPassword;
 
 	if(loginEmail.length === 0) {
-		console.log('niet1')
-		res.redirect('/?message=' + encodeURIComponent("Please fill out your email address."));
+		res.redirect('/login/?message=' + encodeURIComponent("Please fill out your email address."));
 		return;
 	}
 
 	if(loginPassword.length === 0) {
-		console.log('niet2')
-		res.redirect('/?message=' + encodeURIComponent("Please fill out your password."));
+		res.redirect('/login/?message=' + encodeURIComponent("Please fill out your password."));
 		return;
 	}
 
@@ -149,18 +153,15 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 			email: loginEmail
 		}
 	}).then(function (user) {
-		console.log('niet3')
 		if (user !== null && loginPassword === user.password) {
 			req.session.user = user;
 			console.log(user.id)
 			res.redirect('/profile');
 		} else {
-			console.log('niet5')
-			res.redirect('/?message=' + encodeURIComponent("Invalid email or password."));
+			res.redirect('/login/?message=' + encodeURIComponent("Invalid email or password."));
 		}
 	}, function (error) {
-		console.log('niet6')
-		res.redirect('/?message=' + encodeURIComponent("Invalid email or password."));
+		res.redirect('/login/?message=' + encodeURIComponent("Invalid email or password."));
 	});
 });
 
@@ -169,18 +170,23 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 
 // Profile - add new post and view your posts
 app.get('/profile', function(req, res){
-	User.findOne({
-		where: {
-			id: req.session.user.id
-		}
-	}).then(function(theuser){
-		theuser.getPosts().then((posts) => {
-			res.render('profile', {
-				yourPosts: posts,
-				storedUser: req.session.user
+	var user = req.session.user;
+	if (user === undefined) {
+		res.redirect('/?message=' + encodeURIComponent("Please log in to view your profile."));
+	} else {
+		User.findOne({
+			where: {
+				id: user.id
+			}
+		}).then(function(theuser){
+			theuser.getPosts({include: [Comment]}).then((posts) => {
+				res.render('profile', {
+					yourPosts: posts,
+					storedUser: user
+				});
 			});
 		});
-	});
+	}
 });
 
 
@@ -201,8 +207,8 @@ app.post('/profile', function(req, res){
 			body: bodyPost,
 			img: imgPost
 		}).then(function(){
-		res.redirect( '/profile' )
-	})
+			res.redirect( '/profile' )
+		})
 	})
 })
 
@@ -222,12 +228,16 @@ app.get('/onepost', function(req, res){
 } );
 
 
+//cannot access session here
 app.get('/logout', function(req, res){
 	req.session.destroy(function(err) {
-  	//cannot access session here
-  })
-	res.render('blog', {
-		message: 'Successfully logged out.'})
+		if(error) {
+			throw error;
+		}res.render('blog', {
+			message: 'Successfully logged out.'})
+
+	})
+	
 })
 
 

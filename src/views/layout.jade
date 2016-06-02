@@ -4,22 +4,23 @@ html
 		title= title
 		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat' type='text/css')
 		link(rel='stylesheet', href='style.css', type='text/css')
-		script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js")
-		script(src="comments.js")
 
 	body
 		#navbar-fixed
-			a(href='/') Wall
-			a(href='http://localhost:3000/register') Register
-			a(href='http://localhost:3000/login') Login 
-			a(href='http://localhost:3000/profile') Profile
+			a.menu(href='/') Blog
+			if storedUser
+				a.menu(href='http://localhost:3000/profile') Profile
+				a.menu.log(href='http://localhost:3000/logout') Logout
+			else 
+				a.menu(href='http://localhost:3000/register') Register
+				a.menu.log(href='http://localhost:3000/login') Login 
+
+		h2#error-message= message
 			
 	#content
 		block content
 
 
-// - login
-// - logout
 
 
 

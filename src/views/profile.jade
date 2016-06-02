@@ -37,3 +37,4 @@ block content
 					input(type='text', name='id', value="#{post.id}", hidden)
 					br
 					input(type="submit", value="Make a comment")
+			p= post.comments.body
