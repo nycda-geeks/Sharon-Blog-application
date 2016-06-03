@@ -55,6 +55,7 @@ app.get('/', function(req, res){
 	Post.findAll({ include: [{model: User}, {model: Comment, include: [User]}] 
 }).then((posts) => {
 	res.render('blog', {
+		title: 'Blog application',
 		message: req.query.message,
 		storedUser: req.session.user,
 		allPosts: posts
@@ -99,7 +100,8 @@ app.post('/comment', function(req, res){
 // Still to add: if user already exists; don't create but return with error.
 app.get('/register', function(req, res){
 	res.render('register', {
-		message: req.query.message
+		message: req.query.message,
+		title: 'Register blog application'
 	})
 } );
 
@@ -136,7 +138,8 @@ app.post('/register', function(req, res){
 
 app.get('/login', function(req, res){
 	res.render('login', {
-		message: req.query.message
+		message: req.query.message,
+		title: 'Login blog application'
 	})
 } );
 
@@ -179,7 +182,8 @@ app.get('/profile', function(req, res){
 	var user = req.session.user;
 	if (user === undefined) {
 		res.render('profile', {
-			message: 'Please log in to view your profile.'
+			message: 'Please log in to view your profile.',
+			title: 'Profile blog application'
 		});
 	} else {
 		Post.findAll({
@@ -195,13 +199,14 @@ app.get('/profile', function(req, res){
 					res.render('profile', {
 						message: req.query.message,
 						yourPosts: posts,
-						storedUser: user
+						storedUser: user,
+						title: 'Profile blog application'
 					});
 				} else {
 					res.render('profile', {
-						message: req.query.message,
 						yourPosts: posts,
-						storedUser: user
+						storedUser: user,
+						title: 'Profile blog application'
 					});
 				}
 
@@ -252,7 +257,9 @@ app.get('/logout', function(req, res){
 		}
 	})
 	res.render('index', {
-		message: 'Successfully logged out.'})
+		message: 'Successfully logged out.',
+		title: 'Logout blog application'
+	})
 })
 
 
