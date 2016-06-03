@@ -8,11 +8,13 @@ block content
 
 	p
 		form(name="submitPost", action="/login", method="post")
-			div.input
-				span.label Email  
+			div.titles
+				span.label Email
+				br
+				span.label Password
+			div.inputfields
 				input(type="text", name="loginEmail")
-			div.input
-				span.label Password 
+				br
 				input(type="password", name="loginPassword")
 			div.actions
 				input#button(type="submit", value="Login")

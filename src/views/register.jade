@@ -5,14 +5,12 @@ block content
 	h2 Create your account
 
 	form(name="registerUser", action="/register", method="post")
-		div.input
-			span.label Name 
+		div.inputfields
+			span.title Name
 			input(type="text", name="nameUser")
-		div.input
-			span.label Email 
+			span.title Email
 			input(type="text", name="emailUser")
-		div.input
-			span.label Password 
+			span.title Password
 			input(type="password", name="passwordUser")
 		div.actions
 			input#button(type="submit", value="Create your account")

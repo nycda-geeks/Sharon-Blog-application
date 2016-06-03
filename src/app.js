@@ -217,13 +217,14 @@ app.post('/profile', function(req, res){
 
 //cannot access session here
 app.get('/logout', function(req, res){
+	console.log(req.session)
 	req.session.destroy(function(err) {
 		if(err) {
 			throw err;
-		}.then(() => { res.render('blog', {
-			message: 'Successfully logged out.'})
+		}
 	})
-	})
+	res.render('index', {
+		message: 'Successfully logged out.'})
 })
 
 

@@ -3,7 +3,7 @@ extends layout
 block content
 
 	h2 Blog
-
+	
 	each post in allPosts
 		h3= post.title
 		p= 'Posted by ' + post.user.name
@@ -23,8 +23,8 @@ block content
 		else 
 			a(href='http://localhost:3000/login') Please login to post comments.
 		each one in post.comments
-			p= 'Comment by ' + one.user.name
-			p= one.body
+			p.commentname= 'Comment by ' + one.user.name
+			p.comment= one.body
 		
 
 
