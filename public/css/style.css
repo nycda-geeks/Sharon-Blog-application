@@ -36,6 +36,25 @@ body {
     width: 50%;
     margin: 100px auto 50px;
     text-align: center; }
+    body #content #indexpage {
+      margin-top: 150px; }
+      body #content #indexpage a.index {
+        text-decoration: none;
+        background-color: #00307F;
+        border: 2px #ddd;
+        padding: 25px;
+        margin: 15px;
+        color: #eee;
+        text-align: center;
+        font-size: 21px;
+        transition: 0.5s;
+        box-shadow: 5px 5px 10px #eee;
+        border-radius: 15px;
+        clear: both;
+        display: block; }
+      body #content #indexpage a.index:hover {
+        transform: scale(1.05, 1.05);
+        box-shadow: 10px 10px 15px #ddd; }
     body #content h2 {
       color: #B2121B;
       font-size: 40px;

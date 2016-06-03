@@ -52,6 +52,16 @@ Comment.belongsTo(Post)
 
 //Homepage Wall
 app.get('/', function(req, res){
+	res.render('index', {
+		title: 'Blog application',
+		message: req.query.message,
+		storedUser: req.session.user,
+	})
+})
+
+
+//Wall
+app.get('/blog', function(req, res){
 	Post.findAll({ include: [{model: User}, {model: Comment, include: [User]}] 
 }).then((posts) => {
 	res.render('blog', {
@@ -62,7 +72,6 @@ app.get('/', function(req, res){
 	})
 } );
 })
-
 
 
 app.post('/comment', function(req, res){
@@ -209,7 +218,6 @@ app.get('/profile', function(req, res){
 						title: 'Profile blog application'
 					});
 				}
-
 			})
 		}
 	});
@@ -246,6 +254,34 @@ app.post('/profile', function(req, res){
 		}
 	}
 })
+
+
+
+// One post
+app.get('/onepost/:id', function(req, res){
+	var requestParameters = req.params
+	var user = req.session.user
+
+	Post.findOne({
+		where: {
+			id: req.params.id
+		}, 
+		include: [
+		User, { model: Comment, include: [{
+				model: User
+			}]
+		}]
+
+	}).then((thepost) => {
+		console.log(thepost)
+		res.render('onepost', {
+			title: 'Post: ' + req.params.title,
+			thepost: thepost,
+			storedUser: user
+		})
+	})
+})
+
 
 
 //cannot access session here

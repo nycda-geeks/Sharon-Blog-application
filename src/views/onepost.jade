@@ -1,12 +1,25 @@
-// - view a specific post, including the comments people have made about it
-// - leave a comment on a post
-
 extends layout
 
 block content
-
-	h2= postTitle
-
-	p= postText
-
-	img= postImg
+	.post
+		h3=thepost.title
+		p.postedBy='Author: ' + thepost.user.name
+		if thepost.body
+			p= thepost.body
+		if thepost.img
+			img(src= thepost.img)
+		if storedUser
+			form(name="commenting", action="/comment", method="post")
+				div.commentfields
+					span.commenting Leave your comment:
+					br
+					textarea(type="text", name="postComment", cols="50", rows="3")
+					input(type='text', name='id', value="#{post.id}", hidden)
+					input(type='text', name='origin', value="/", hidden)
+					br
+					input#button(type="submit", value="Make a comment")
+		else
+			a.pleaselogin(href='http://localhost:3000/login') Please login to post comments.
+		each one in thepost.comments
+			p.commentname= one.user.name + ': '
+			p.comment= one.body

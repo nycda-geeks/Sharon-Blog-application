@@ -3,11 +3,11 @@ html
 	head
 		title= title
 		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat' type='text/css')
-		link(rel='stylesheet', href='style.css', type='text/css')
+		link(rel='stylesheet' href='style.css' type='text/css')
 
 	body
 		#navbar-fixed
-			a.first(href='/') Blog
+			a.first(href='/blog') Blog
 			if storedUser
 				a.smth(href='http://localhost:3000/profile')= 'Profile ' + storedUser.name
 				a.log.last(href='http://localhost:3000/logout') Logout 
@@ -19,9 +19,3 @@ html
 			
 	#content
 		block content
-
-
-
-
-
-

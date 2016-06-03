@@ -6,29 +6,6 @@ block content
 	
 	each post in allPosts
 		.post
-			h3= post.title
-			p.postedBy= 'Author: ' + post.user.name
-			if post.body
-				p= post.body
-			if post.img 
-				img(src= post.img)
-			if storedUser	
-				form(name="commenting", action="/comment", method="post")
-					div.commentfields
-						span.commenting Leave your comment:
-						br
-						textarea(type="text", name="postComment", cols="50", rows="3")
-						input(type='text', name='id', value="#{post.id}", hidden)
-						input(type='text', name='origin', value="/", hidden)
-						br
-						input#button(type="submit", value="Make a comment")
-			else 
-				a.pleaselogin(href='http://localhost:3000/login') Please login to post comments.
-			each one in post.comments
-				p.commentname= one.user.name + ': '
-				p.comment= one.body
-		
-
-
-
-// - view a list of everyone's posts
+			h3
+				a(href="/onepost/" + post.id)= post.title
+					p.postedBy= 'Author: ' + post.user.name
