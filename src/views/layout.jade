@@ -2,20 +2,20 @@ doctype html
 html
 	head
 		title= title
-		//- link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat' type='text/css')
+		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat' type='text/css')
 		link(rel='stylesheet', href='style.css', type='text/css')
 
 	body
 		#navbar-fixed
-			a(href='/') Blog
+			a.first(href='/') Blog
 			if storedUser
-				a(href='http://localhost:3000/profile') Profile
-				a.log(href='http://localhost:3000/logout') Logout
+				a.smth(href='http://localhost:3000/profile')= 'Profile ' + storedUser.name
+				a.log.last(href='http://localhost:3000/logout') Logout 
 			else 
-				a(href='http://localhost:3000/register') Register
+				a.log.last(href='http://localhost:3000/register') Register
 				a.log(href='http://localhost:3000/login') Login 
 
-		h2= message
+		h2#error-message= message
 			
 	#content
 		block content

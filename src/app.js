@@ -65,26 +65,32 @@ app.get('/', function(req, res){
 
 
 app.post('/comment', function(req, res){
-	Promise.all([
-		Comment.create({
-			body: req.body.postComment
-		}),
-		User.findOne({
-			where: {
-				id: req.session.user.id
-			}
-		}),
-		Post.findOne({
-			where: {
-				id: req.body.id
-			}
-		})
-		]).then(function(allofthem){
-			allofthem[0].setUser(allofthem[1])
-			allofthem[0].setPost(allofthem[2])
-		}).then(function(){
-			res.redirect(req.body.origin)
-		})
+	if(req.body.postComment != undefined){
+		Promise.all([
+			Comment.create({
+				body: req.body.postComment
+			}),
+			User.findOne({
+				where: {
+					id: req.session.user.id
+				}
+			}),
+			Post.findOne({
+				where: {
+					id: req.body.id
+				}
+			})
+			]).then(function(allofthem){
+				allofthem[0].setUser(allofthem[1])
+				allofthem[0].setPost(allofthem[2])
+			}).then(function(){
+				res.redirect(req.body.origin)
+			})
+		}
+		if(req.body.postComment === undefined) {
+			res.redirect(req.body.origin + '?message=' + encodeURIComponent("Please write a comment first."))
+		}
+
 	})
 
 
@@ -104,15 +110,15 @@ app.post('/register', function(req, res){
 	var passwordUser = req.body.passwordUser
 
 	if(nameUser.length === 0) {
-		res.redirect('/register/?message=' + encodeURIComponent("Please fill out your email address."));
+		res.redirect('/register?message=' + encodeURIComponent("Please fill out your email address."));
 		return;
 	}
 	if(emailUser.length === 0) {
-		res.redirect('/register/?message=' + encodeURIComponent("Please fill out your password."));
+		res.redirect('/register?message=' + encodeURIComponent("Please fill out your password."));
 		return;
 	}
 	if(passwordUser.length === 0) {
-		res.redirect('/register/?message=' + encodeURIComponent("Please fill out your password."));
+		res.redirect('/register?message=' + encodeURIComponent("Please fill out your password."));
 		return;
 	}
 	if(nameUser !== null && emailUser !== null && passwordUser !== null){
@@ -139,12 +145,12 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 	var loginPassword = req.body.loginPassword;
 
 	if(loginEmail.length === 0) {
-		res.redirect('/login/?message=' + encodeURIComponent("Please fill out your email address."));
+		res.redirect('/login?message=' + encodeURIComponent("Please fill out your email address."));
 		return;
 	}
 
 	if(loginPassword.length === 0) {
-		res.redirect('/login/?message=' + encodeURIComponent("Please fill out your password."));
+		res.redirect('/login?message=' + encodeURIComponent("Please fill out your password."));
 		return;
 	}
 
@@ -158,10 +164,10 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 			console.log(user.id)
 			res.redirect('/profile');
 		} else {
-			res.redirect('/login/?message=' + encodeURIComponent("Invalid email or password."));
+			res.redirect('/login?message=' + encodeURIComponent("Invalid email or password."));
 		}
 	}, function (error) {
-		res.redirect('/login/?message=' + encodeURIComponent("Invalid email or password."));
+		res.redirect('/login?message=' + encodeURIComponent("Invalid email or password."));
 	});
 });
 
@@ -172,7 +178,9 @@ app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
 app.get('/profile', function(req, res){
 	var user = req.session.user;
 	if (user === undefined) {
-		res.redirect('/?message=' + encodeURIComponent("Please log in to view your profile."));
+		res.render('profile', {
+			message: 'Please log in to view your profile.'
+		});
 	} else {
 		Post.findAll({
 			where: {
@@ -183,10 +191,20 @@ app.get('/profile', function(req, res){
 					model: User }] 
 				}]
 			}).then((posts) => {
-				res.render('profile', {
-					yourPosts: posts,
-					storedUser: user
-				});
+				if (req.query) {
+					res.render('profile', {
+						message: req.query.message,
+						yourPosts: posts,
+						storedUser: user
+					});
+				} else {
+					res.render('profile', {
+						message: req.query.message,
+						yourPosts: posts,
+						storedUser: user
+					});
+				}
+
 			})
 		}
 	});
@@ -198,20 +216,30 @@ app.post('/profile', function(req, res){
 	var bodyPost = req.body.bodyPost
 	var imgPost = req.body.imgPost
 
+	console.log(req.body)
+
 	console.log(req.session.user)
-	User.findOne({
-		where: {
-			id: req.session.user.id
+	if(titlePost.length == 0 && bodyPost.length == 0 && imgPost.length == 0){
+		res.redirect('/profile?message=' + encodeURIComponent("Your post can't be empty."));
+	} else if(bodyPost.length == 0 && imgPost.length == 0){
+		res.redirect('/profile?message=' + encodeURIComponent("Your post can't be empty."));
+	} else if(bodyPost.length != 0 || imgPost.length != 0){
+		if (titlePost.length != 0) {
+			User.findOne({
+				where: {
+					id: req.session.user.id
+				}
+			}).then(function(theuser){
+				theuser.createPost({
+					title: titlePost,
+					body: bodyPost,
+					img: imgPost
+				}).then(function(){
+					res.redirect( '/profile' )
+				})
+			})
 		}
-	}).then(function(theuser){
-		theuser.createPost({
-			title: titlePost,
-			body: bodyPost,
-			img: imgPost
-		}).then(function(){
-			res.redirect( '/profile' )
-		})
-	})
+	}
 })
 
 

@@ -5,39 +5,43 @@ extends layout
 
 block content
 
-	h2= 'Welcome to your profile ' + storedUser.name
+	if storedUser
+		h2= 'Welcome to your profile ' + storedUser.name
 
-	p
-		form(name="submitPost", action="/profile", method="post")
-			div.input
-				span.label Title 
-				br
-				input(type="text", name="titlePost")
-			div.input
-				span.label Write your message 
-				br
-				textarea(type="text", name="bodyPost", rows="5")
-			div.input
-				span.label Add an image link
-				br
-				input(type="text", name="imgPost")
-			div.actions
-				input#button(type="submit", value="Post")
+		p
+			form(name="submitPost", action="/profile", method="post")
+				div.profilefields
+					span.title Title 
+					br
+					input(type="text", name="titlePost", size="40")
+					br
+					span.title Write your message 
+					br
+					textarea(type="text", name="bodyPost", cols="40" rows="3")
+					br
+					span.title Add an image link
+					br
+					input(type="text", name="imgPost", size="40")
+					br
+					input#button(type="submit", value="Post")
 
-	if yourPosts
-		each post in yourPosts
-			h3= post.title
-			p= post.body
-			img(src= post.img)
-			form(name="commenting", action="/comment", method="post")
-				div.input
-					span.label Leave your comment:
-					br
-					textarea(type="text", name="postComment", cols="50", rows="3")
-					input(type='text', name='id', value="#{post.id}", hidden)
-					input(type='text', name='origin', value="/profile", hidden)
-					br
-					input(type="submit", value="Make a comment")
-			each one in post.comments
-				p.commentuser= 'Comment by ' + one.user.name
-				p.commentbody= one.body
+		if yourPosts
+			each post in yourPosts
+				.post
+					h3= post.title
+					if post.body
+						p= post.body
+					if post.img 
+						img(src= post.img)
+					form(name="commenting", action="/comment", method="post")
+						div.commentfields
+							span.commenting Leave your comment:
+							br
+							textarea(type="text", name="postComment", cols="50", rows="3")
+							input(type='text', name='id', value="#{post.id}", hidden)
+							input(type='text', name='origin', value="/profile", hidden)
+							br
+							input#button(type="submit", value="Make a comment")
+					each one in post.comments
+						p.commentname= one.user.name + ': '
+						p.comment= one.body

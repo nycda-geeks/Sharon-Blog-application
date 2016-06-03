@@ -1,76 +1,232 @@
 body {
-	font-family: sans-serif;
-	font-size: 18px;
-	width:80%;
-	margin:0 10%;
+	font-family: Montserrat, sans-serif;
+	width:100%;
+	margin:auto;
 
 	#navbar-fixed {
 		position:fixed;
 		top:0;
 		width:100%;
-		padding:25px 0;
+		padding:15px 0;
+		margin:0;
 		background-color: white;
+		box-shadow: 0 5px 5px #eee;
 
+		a.first {
+			padding-left:15%;
+			float:left;
+		}
+		a.smth {
+			float:left;
+		}
 		a {
 			text-decoration: none;
-			color:#333;
+			font-size: 18px;
+			color: #00307F;
 			line-height: 24px;
 			margin: 5px 20px 5px 0;
 		}
-
-		h2 {
-			color: red;
+		a:hover {
+			color: #B2121B;
 		}
 	}
+	#error-message {
+		color:red;
+		margin:100px 0 0;
+		text-align: center;
+	}
+
+	.log {
+		float:right;
+		color:#26487F;
+	}
+	.log.last {
+		padding-right:15%
+	}
+
 
 	#content {
-		margin-top:124px;
+		width:50%;
+		margin:100px auto 50px;
+		text-align: center;
 
 		h2 {
 			color: #B2121B;
-			font-size: 24px;
+			font-size: 40px;
+			margin:50px auto;
 		}
 		h3 {
-			font-size: 21px;
+			font-size: 30px;
+			margin:50px auto 0;
+			color: #00307F;
 		}
 		p {
-			margin:0;
+			margin:0 0 5px;
+			font-size: 21px;
+		}
+		img {
+			width:80%;
+			margin:10px 10%;
+		}
+		//posts
+		.post {
+			border-radius: 5px;
+			border: #ddd 2px solid;
+			box-shadow: 10px 10px 25px #eee;
+			padding-bottom: 25px;
+			margin-bottom:25px;
+		}
 
-			//comments
-			.commentname {
-				color:#555;
-				size:16px;
-				line-height:20px;
-			}
-			.comment {
-				color: #222;
-				size: 16px;
-				line-height: 20px;
-			}
+		.postedBy {
+			font-size: 14px;
+			color:#aaa;
+			margin-bottom: 10px;
+		}
+
+		//comments
+		.commentname {
+			color:#000;
+			font-size:16px;
+			text-decoration: bold;
+			margin-top: 10px;
+		}
+		.comment {
+			color: #aaa;
+			font-size: 16px;
+			margin: 0 10px 10px;
+		}
+		.commenting {
+			color: #aaa;
+			font-size: 16px;
+			margin: 0 10px 10px;
+		}
+		a.pleaselogin {
+			color: #B2121B;
+			text-align: center;
+			font-size: 21px;
+		}
+		.pleaselogin:hover {
+			text-decoration: none;
+			color: #00307F;
 		}
 
 		//login
-		form {
+		#reglog {
+			width: 100%;
+			margin:0 auto;
 			.inputfields {
-				width: 500px;
+				display:inline-block;
 				.title {
-					width: 250px;
-					float: left;
 					color: #ccc;
 					padding: 5px;
+					clear:left;
+					margin-left:10%;
+					float: left;
+					min-width: 100px;
+					text-align: left;
 				}
 				input {
-					width: 150px;
 					margin: 5px;
+					float:right;
+					clear:right;
+					margin-right: 10%;
 				}
+
 			}
+			#button {
+				color: white;
+				background-color: #B2121B;
+				border: #E2121C 1px; 
+				padding:10px;
+				float:right;
+				margin:15px 10%;
+				border-radius: 5px;
+				box-shadow: 5px 5px 5px #eee;
+				clear:both;
+			}
+			#button:hover {
+				background-color: #00307F;
+				border: #26487F 1px; 
+			}
+		}
+		.profilefields {
+			//width: 100%;
+			margin:0 auto;
+			display:inline-block;
+			text-align: center;
+
+			.title {
+				color: #ccc;
+				padding: 5px;
+				margin-top:10px;
+			}
+			input {
+				margin:5px;
+				border: #ccc solid 1px;
+			}
+			textarea {
+				margin:5px;
+				border: #ccc solid 1px;
+			}
+
+			#button {
+			color: white;
+			background-color: #B2121B;
+			border: #E2121C 1px; 
+			padding:10px;
+			margin:10px;
+			border-radius: 5px;
+			display: inline-block;
+			margin-bottom: 20px;
+			box-shadow: 5px 5px 5px #eee;
+			clear:both;
+		}
+		#button:hover {
+			background-color: #00307F;
+			border: #26487F 1px; 
+		}
+
+			
+		}
+		
+
+		.commentfields {
+			width: 100%;
+			margin:0 auto;
+			display:block;
+			text-align: center;
+
+			.commenting {
+				color: #ccc;
+				padding: 5px;
+				margin-top:15px;
+			}
+			textarea {
+				margin:5px;
+				border: #ccc solid 1px;
+			}
+
+			#button {
+			color: white;
+			background-color: #ccc;
+			border: #E2121C 1px; 
+			padding:5px;
+			margin:0 5px 5px;
+			border-radius: 5px;
+			display: inline-block;
+			margin-bottom: 20px;
+			box-shadow: 5px 5px 5px #eee;
+			clear:both;
+		}
+		#button:hover {
+			background-color: #00307F;
+			border: #26487F 1px; 
+		}
 
 		}
 	}
 
-	img {
-		max-width:500px;
-	}
+	
 
 
 }

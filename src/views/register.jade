@@ -3,17 +3,16 @@ extends layout
 block content
 
 	h2 Create your account
-
-	form(name="registerUser", action="/register", method="post")
-		div.inputfields
-			span.title Name
-			input(type="text", name="nameUser")
-			span.title Email
-			input(type="text", name="emailUser")
-			span.title Password
-			input(type="password", name="passwordUser")
-		div.actions
-			input#button(type="submit", value="Create your account")
+	#reglog
+		form(name="registerUser", action="/register", method="post")
+			div.inputfields
+				span.title Name
+				input(type="text", name="nameUser", size="40")
+				span.title Email
+				input(type="text", name="emailUser", size="40")
+				span.title Password
+				input(type="password", name="passwordUser", size="40")
+				input#button(type="submit", value="Create your account")
 
 
 // - register an account 
