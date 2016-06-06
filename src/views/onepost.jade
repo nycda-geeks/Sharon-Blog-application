@@ -16,7 +16,7 @@ block content
 					br
 					textarea(type="text", name="postComment", cols="50", rows="3")
 					input(type='text', name='id', value="#{thepost.id}", hidden)
-					input(type='text', name='origin', value="/", hidden)
+					input(type='text', name='origin', value="/onepost/" + thepost.id, hidden)
 					br
 					input#button(type="submit", value="Make a comment")
 		else
