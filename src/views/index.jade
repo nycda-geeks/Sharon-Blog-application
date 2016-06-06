@@ -3,9 +3,14 @@ extends layout
 block content
 
 	#indexpage 
-		a.index(href="/blog") Go to the BLOG to view all posts
 
-		a.index(href="/login") LOGIN to write posts and comments
+		if storedUser
+			a.index(href="/blog") Go to the BLOG to view all posts
 
-		a.index(href="/register") REGISTER if you are new
+		else
+			a.index(href="/blog") Go to the BLOG to view all posts
+			
+			a.index(href="/login") LOGIN to write posts and comments
+
+			a.index(href="/register") REGISTER if you are new
 		
