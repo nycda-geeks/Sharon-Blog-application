@@ -8,7 +8,7 @@ var session = require('express-session');
 var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 
-var sequelize = new Sequelize('blogapplication', 'postgres', 'Hi123', {
+var sequelize = new Sequelize('blogapplication', process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
 	host: 'localhost',
 	dialect: 'postgres'
 });
