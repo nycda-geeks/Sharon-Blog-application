@@ -1,6 +1,7 @@
 extends layout
 
 block content
+
 	.post
 		h3=thepost.title
 		p.postedBy='Author: ' + thepost.user.name
@@ -14,7 +15,7 @@ block content
 					span.commenting Leave your comment:
 					br
 					textarea(type="text", name="postComment", cols="50", rows="3")
-					input(type='text', name='id', value="#{post.id}", hidden)
+					input(type='text', name='id', value="#{thepost.id}", hidden)
 					input(type='text', name='origin', value="/", hidden)
 					br
 					input#button(type="submit", value="Make a comment")
@@ -23,3 +24,5 @@ block content
 		each one in thepost.comments
 			p.commentname= one.user.name + ': '
 			p.comment= one.body
+
+	a#returnblog(href='/blog') Return to blog

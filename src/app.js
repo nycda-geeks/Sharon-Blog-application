@@ -23,7 +23,7 @@ app.use(session({
 app.set('views', './src/views');
 app.set('view engine', 'jade')
 
-app.use(express.static('./public/js'))
+app.use(express.static('./public/js'))	
 app.use(express.static('./public/css'))
 
 var User = sequelize.define('users', {
@@ -35,10 +35,10 @@ var Post = sequelize.define('posts', {
 	title: Sequelize.STRING,
 	body: Sequelize.STRING,
 	img: Sequelize.STRING
-})
+});
 var Comment = sequelize.define('comments', {
 	body: Sequelize.STRING,
-})
+});
 
 sequelize.sync()
 
@@ -259,15 +259,17 @@ app.post('/profile', function(req, res){
 
 // One post
 app.get('/onepost/:id', function(req, res){
-	var requestParameters = req.params
+	var postID = req.params.id
 	var user = req.session.user
+
+	console.log(req.params.id)
 
 	Post.findOne({
 		where: {
 			id: req.params.id
 		}, 
 		include: [
-		User, { model: Comment, include: [{
+		{model: User}, { model: Comment, include: [{
 				model: User
 			}]
 		}]
@@ -275,7 +277,8 @@ app.get('/onepost/:id', function(req, res){
 	}).then((thepost) => {
 		console.log(thepost)
 		res.render('onepost', {
-			title: 'Post: ' + req.params.title,
+			title: 'One post',
+			postID: postID,
 			thepost: thepost,
 			storedUser: user
 		})

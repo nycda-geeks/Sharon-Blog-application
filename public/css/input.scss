@@ -11,42 +11,61 @@ body {
 		margin:0;
 		background-color: white;
 		box-shadow: 0 5px 5px #eee;
+	}
+	@media screen and (min-width: 400px) {
+		#navbar-fixed {
+			a.first {
+				padding-left:15%;
+				float:left;
+			}
+			a.smth {
+				float:left;
+			}
+			a {
+				text-decoration: none;
+				font-size: 18px;
+				color: #00307F;
+				line-height: 24px;
+				margin: 5px 20px 5px 0;
+			}
+			a:hover {
+				color: #B2121B;
+			}
+		}
+		#error-message {
+			color:red;
+			margin:100px 0 0;
+			text-align: center;
+		}
 
-		a.first {
-			padding-left:15%;
-			float:left;
+		.log {
+			float:right;
+			color:#26487F;
 		}
-		a.smth {
-			float:left;
-		}
-		a {
-			text-decoration: none;
-			font-size: 18px;
-			color: #00307F;
-			line-height: 24px;
-			margin: 5px 20px 5px 0;
-		}
-		a:hover {
-			color: #B2121B;
+		.log.last {
+			padding-right:15%;
 		}
 	}
-	#error-message {
-		color:red;
-		margin:100px 0 0;
-		text-align: center;
+	@media screen and (max-width: 400px) {
+		#navbar-fixed {
+			text-align: center;
+			a {
+				text-decoration: none;
+				font-size: 18px;
+				color: #00307F;
+				line-height: 24px;
+				margin: 5px 20px 5px;
+				display:block;
+			}
+		}
 	}
-
-	.log {
-		float:right;
-		color:#26487F;
-	}
-	.log.last {
-		padding-right:15%;
-	}
-
 
 	#content {
+		@media screen and (max-width: 720px) {
+			width: 100%;
+		}
 		width:50%;
+		min-width: 300px;
 		margin:100px auto 50px;
 		text-align: center;
 
@@ -70,28 +89,28 @@ body {
 			a.index:hover {
 				transform: scale(1.05, 1.05);
 				box-shadow: 10px 10px 15px #ddd;
+			}
 		}
-	}
 
 
-	h2 {
-		color: #B2121B;
-		font-size: 40px;
-		margin:50px auto;
-	}
-	h3 {
-		font-size: 30px;
-		margin:50px auto 0;
-		color: #00307F;
-	}
-	p {
-		margin:0 0 5px;
-		font-size: 21px;
-	}
-	img {
-		width:80%;
-		margin:10px 10%;
-	}
+		h2 {
+			color: #B2121B;
+			font-size: 40px;
+			margin:50px auto;
+		}
+		h3 {
+			font-size: 30px;
+			margin:50px auto 0;
+			color: #00307F;
+		}
+		p {
+			margin:0 0 5px;
+			font-size: 21px;
+		}
+		img {
+			width:80%;
+			margin:10px 10%;
+		}
 		//posts
 		.post {
 			border-radius: 5px;
@@ -99,6 +118,18 @@ body {
 			box-shadow: 10px 10px 25px #eee;
 			padding-bottom: 25px;
 			margin-bottom:25px;
+
+			a {
+				text-decoration: none;
+				color:#00307F;
+			}
+			a:visited {
+				color:#00307F;
+			}
+			a:hover {
+				color:#B2121B;
+			}
+
 		}
 
 		.postedBy {
@@ -247,6 +278,14 @@ body {
 				border: #26487F 1px; 
 			}
 
+		}
+
+		#returnblog {
+			text-decoration: none;
+			color:#00307F;
+		}
+		#returnblog:hover {
+			color: #B2121B;
 		}
 	}
 

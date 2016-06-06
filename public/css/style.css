@@ -10,6 +10,7 @@ body {
     margin: 0;
     background-color: white;
     box-shadow: 0 5px 5px #eee; }
+  @media screen and (min-width: 400px) {
     body #navbar-fixed a.first {
       padding-left: 15%;
       float: left; }
@@ -23,19 +24,33 @@ body {
       margin: 5px 20px 5px 0; }
     body #navbar-fixed a:hover {
       color: #B2121B; }
-  body #error-message {
-    color: red;
-    margin: 100px 0 0;
-    text-align: center; }
-  body .log {
-    float: right;
-    color: #26487F; }
-  body .log.last {
-    padding-right: 15%; }
+    body #error-message {
+      color: red;
+      margin: 100px 0 0;
+      text-align: center; }
+    body .log {
+      float: right;
+      color: #26487F; }
+    body .log.last {
+      padding-right: 15%; } }
+  @media screen and (max-width: 400px) {
+    body #navbar-fixed {
+      text-align: center; }
+      body #navbar-fixed a {
+        text-decoration: none;
+        font-size: 18px;
+        color: #00307F;
+        line-height: 24px;
+        margin: 5px 20px 5px;
+        display: block; } }
   body #content {
     width: 50%;
+    min-width: 300px;
     margin: 100px auto 50px;
     text-align: center; }
+    @media screen and (max-width: 720px) {
+      body #content {
+        width: 100%; } }
     body #content #indexpage {
       margin-top: 150px; }
       body #content #indexpage a.index {
@@ -75,6 +90,13 @@ body {
       box-shadow: 10px 10px 25px #eee;
       padding-bottom: 25px;
       margin-bottom: 25px; }
+      body #content .post a {
+        text-decoration: none;
+        color: #00307F; }
+      body #content .post a:visited {
+        color: #00307F; }
+      body #content .post a:hover {
+        color: #B2121B; }
     body #content .postedBy {
       font-size: 14px;
       color: #aaa;
@@ -184,5 +206,10 @@ body {
       body #content .commentfields #button:hover {
         background-color: #00307F;
         border: #26487F 1px; }
+    body #content #returnblog {
+      text-decoration: none;
+      color: #00307F; }
+    body #content #returnblog:hover {
+      color: #B2121B; }
 
 /*# sourceMappingURL=style.css.map */
