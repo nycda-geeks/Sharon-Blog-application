@@ -4,6 +4,8 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var Sequelize = require('sequelize')
 var session = require('express-session');
+var bcrypt = require('bcrypt-nodejs');
+//var bcrypt = require('bcrypt')
 
 var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -133,55 +135,74 @@ app.post('/register', function(req, res){
 		return;
 	}
 	if(nameUser !== null && emailUser !== null && passwordUser !== null){
-		User.create({
-			name: nameUser,
-			email: emailUser,
-			password: passwordUser
-		}).then(function(user) {
-			res.redirect( '/profile' )
+
+		bcrypt.genSalt(10, function(err, salt) {
+			if(err) {
+				return console.error(err);
+			}
+
+			bcrypt.hash(passwordUser, salt, null, function(err, hash) {
+				if(err !== undefined){
+					console.log("error" + err)
+				} 
+				console.log(hash)
+				User.create({
+					name: nameUser,
+					email: emailUser,
+					password: hash
+				}).then(function(user) {
+					req.session.user = user;
+					res.redirect( '/profile' )
+				})
+
+			})
 		})
 	}
 })
 
 
 
-app.get('/login', function(req, res){
-	res.render('login', {
-		message: req.query.message,
-		title: 'Login blog application'
-	})
-} );
+		app.get('/login', function(req, res){
+			res.render('login', {
+				message: req.query.message,
+				title: 'Login blog application'
+			})
+		} );
 
-app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
-	var loginEmail = req.body.loginEmail;
-	var loginPassword = req.body.loginPassword;
+		app.post('/login', bodyParser.urlencoded({extended: true}), function(req, res){
+			var loginEmail = req.body.loginEmail;
+			var loginPassword = req.body.loginPassword;
 
-	if(loginEmail.length === 0) {
-		res.redirect('/login?message=' + encodeURIComponent("Please fill out your email address."));
-		return;
-	}
+			if(loginEmail.length === 0) {
+				res.redirect('/login?message=' + encodeURIComponent("Please fill out your email address."));
+				return;
+			}
 
-	if(loginPassword.length === 0) {
-		res.redirect('/login?message=' + encodeURIComponent("Please fill out your password."));
-		return;
-	}
+			if(loginPassword.length === 0) {
+				res.redirect('/login?message=' + encodeURIComponent("Please fill out your password."));
+				return;
+			}
 
-	User.findOne({
-		where: {
-			email: loginEmail
-		}
-	}).then(function (user) {
-		if (user !== null && loginPassword === user.password) {
-			req.session.user = user;
-			console.log(user.id)
-			res.redirect('/profile');
-		} else {
-			res.redirect('/login?message=' + encodeURIComponent("Invalid email or password."));
-		}
-	}, function (error) {
-		res.redirect('/login?message=' + encodeURIComponent("Invalid email or password."));
-	});
-});
+			User.findOne({
+				where: {
+					email: loginEmail
+				}
+			}).then(function (user) {
+				if (user !== null) {
+					bcrypt.compare(loginPassword, user.password, function(err, result) {
+						if(result){
+							req.session.user = user;
+							res.redirect('/profile');
+						}
+						else {
+							res.redirect('/login?message=' + encodeURIComponent("Invalid email or password."));
+						}
+					})
+				} else {
+					res.redirect('/login?message=' + encodeURIComponent("Invalid email or password."));
+				}
+			});
+		});
 
 
 
@@ -270,19 +291,19 @@ app.get('/onepost/:id', function(req, res){
 		}, 
 		include: [
 		{model: User}, { model: Comment, include: [{
-				model: User
-			}]
+			model: User
 		}]
+	}]
 
-	}).then((thepost) => {
-		console.log(thepost)
-		res.render('onepost', {
-			title: 'One post',
-			postID: postID,
-			thepost: thepost,
-			storedUser: user
-		})
+}).then((thepost) => {
+	console.log(thepost)
+	res.render('onepost', {
+		title: 'One post',
+		postID: postID,
+		thepost: thepost,
+		storedUser: user
 	})
+})
 })
 
 
